@@ -377,7 +377,7 @@ SDL_ffmpegFile* SDL_ffmpegOpen( const char* filename )
                 stream->_ffmpeg = file->_ffmpeg->streams[i];
 
                 /* get the correct decoder for this stream */
-                AVCodec *codec = avcodec_find_decoder( stream->_ffmpeg->codecpar->codec_id );
+                const AVCodec *codec = avcodec_find_decoder( stream->_ffmpeg->codecpar->codec_id );
 
                 if ( !codec )
                 {
@@ -427,7 +427,7 @@ SDL_ffmpegFile* SDL_ffmpegOpen( const char* filename )
                 stream->_ffmpeg = file->_ffmpeg->streams[i];
 
                 /* get the correct decoder for this stream */
-                AVCodec *codec = avcodec_find_decoder( file->_ffmpeg->streams[i]->codecpar->codec_id );
+                const AVCodec *codec = avcodec_find_decoder( file->_ffmpeg->streams[i]->codecpar->codec_id );
 
                 if ( !codec )
                 {
