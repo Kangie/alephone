@@ -838,7 +838,7 @@ static void interpolate_weapon_display_information(
 	weapon_display_information* next;
 	weapon_display_information* prev;
 
-	if (data->interpolation_data & 0x3 == _shell_casing_type)
+	if ((data->interpolation_data & 0x3) == _shell_casing_type)
 	{
 		next = &current_tick_weapon_display[index];
 		prev = &previous_tick_weapon_display[index];
