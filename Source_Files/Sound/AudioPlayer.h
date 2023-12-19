@@ -34,7 +34,7 @@ public:
 
     void Set(const T& value) {
         int swappedIndex = index ^ 1;
-        structure[swappedIndex] = value;
+        memcpy(structure + swappedIndex, &value, sizeof(value));
         index = swappedIndex;
     }
 
