@@ -497,7 +497,7 @@ SDL_ffmpegFile* SDL_ffmpegCreate( const char* filename )
     file->_ffmpeg = avformat_alloc_context();
 
     file->_ffmpeg->oformat = av_guess_format( "webm", 0, 0 );
-    file->_ffmpeg->url = filename;
+    file->_ffmpeg->url = av_strdup(filename);
 
     /* open the output file, if needed */
     if (avio_open(&file->_ffmpeg->pb, file->_ffmpeg->url, AVIO_FLAG_WRITE ) < 0 )
@@ -511,6 +511,7 @@ SDL_ffmpegFile* SDL_ffmpegCreate( const char* filename )
 
     file->type = SDL_ffmpegOutputStream;
 
+    free(file->_ffmpeg->url);
     return file;
 }
 
