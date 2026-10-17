@@ -50,11 +50,24 @@ public:
         shared_queue.push(value);
     }
 
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-overflow"
+#endif
+
+    // GCC 15 on aarch64 emits a false-positive -Wstringop-overflow warning for
+    // this two-slot double-buffer switch. The code is intentionally bounded to
+    // exactly two entries, so keep the warning quiet here without changing the
+    // behavior.
     void Set(const T& value) {
         int swappedIndex = index ^ 1;
         structure[swappedIndex] = value;
         index = swappedIndex;
     }
+
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
 
     bool Consume(T& returnValue) {
         return shared_queue.pop(returnValue);
