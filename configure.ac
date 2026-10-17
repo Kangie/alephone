@@ -42,6 +42,7 @@ AX_ARG_WITH([libyuv], [libyuv support for film export and video playback])
 AX_ARG_WITH([nfd], [Native file dialog support])
 
 dnl Check for programs.
+AC_PROG_AR
 AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_CXX
@@ -322,6 +323,7 @@ dnl Print summary of key compilation variables.
 AS_ECHO([""])
 AS_ECHO(["Compilation settings:"])
 AS_ECHO([""])
+AS_ECHO(["         AR: ${AR}"])
 AS_ECHO(["         CC: ${CC}"])
 AS_ECHO(["        CXX: ${CXX}"])
 AS_ECHO(["        CPP: ${CPP}"])
