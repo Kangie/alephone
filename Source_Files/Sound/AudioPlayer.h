@@ -36,24 +36,27 @@ struct AtomicStructure {
 private:
     static constexpr uint32_t queue_size = 5;
     boost::lockfree::spsc_queue<T, boost::lockfree::capacity<queue_size>> shared_queue;
-    std::atomic_int index = { 0 };
-    T structure[2];
+    std::atomic<uint8_t> index = { 0 };
+    alignas(alignof(T)) T structure[2] = {};
+
+    static_assert(std::is_trivially_copyable_v<T>, "AtomicStructure requires a trivially copyable value type");
 public:
     AtomicStructure& operator= (const T& structure) {
-        this->structure[index] = structure;
+        this->structure[index.load(std::memory_order_relaxed)] = structure;
         return *this;
     }
 
-    const T& Get() const { return structure[index]; }
+    const T& Get() const { return structure[index.load(std::memory_order_acquire)]; }
 
     void Store(const T& value) {
         shared_queue.push(value);
     }
 
     void Set(const T& value) {
-        int swappedIndex = index ^ 1;
+        const auto currentIndex = index.load(std::memory_order_relaxed);
+        const auto swappedIndex = static_cast<uint8_t>(currentIndex ^ 1U);
         structure[swappedIndex] = value;
-        index = swappedIndex;
+        index.store(swappedIndex, std::memory_order_release);
     }
 
     bool Consume(T& returnValue) {
